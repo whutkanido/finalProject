@@ -27,6 +27,38 @@ ul {
     background-repeat: no-repeat;
 }
 
+#pName {
+    /* border: 1px solid white; */
+    color: white;
+    text-align: center;
+    font-style: oblique;
+    font-weight: bold;
+    font-size: 30px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    height: 30px;
+    width: 400px;
+    position: absolute;
+    top: 3%;
+    left: 26%;
+    transform: translate(-50%, -50%);
+}
+
+#eName {
+    /* border: 1px solid white; */
+    color: white;
+    text-align: center;
+    font-style: oblique;
+    font-weight: bold;
+    font-size: 30px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    height: 30px;
+    width: 400px;
+    position: absolute;
+    top: 3%;
+    left: 74%;
+    transform: translate(-50%, -50%);
+}
+
 #playerSprite {
     background: transparent;
     
@@ -41,7 +73,7 @@ ul {
 }
 
 #enemySprite {
-    background-image: url('sprite/skull-ice.png');
+    background-image: transparent;
     
     height: 298px;
     width: 200px;
@@ -69,12 +101,15 @@ ul {
 }
 
 #enemyStats {
-    border: 1px solid white;
+    /* border: 1px solid white; */
+    font-size: 30px;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     height: 150px;
-    width: 150px;
+    width: 200px;
     position: absolute;
     top: 60%;
-    left: 75%;
+    left: 78%;
     transform: translate(-50%, -50%);
     background-repeat: no-repeat;
     background-size: contain;
