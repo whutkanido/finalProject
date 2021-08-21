@@ -2,6 +2,12 @@ function randomNumBetween(min,max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 } 
 
+// cache game DOM elements
+
+const $battleText = $('div.battleText');
+
+// cache player DOM elements
+
 const $playerHP = $('li#pHp');
 const $playerMP = $('li#pMp');
 const $playerAttack = $('li#pAttack');
@@ -9,6 +15,8 @@ const $playerName = $('div#pName');
 const $playerDefense = $('li#pDefense');
 // const playerSpeed = document.querySelector('#pSpeed');
 // const playerSprite = document.querySelector('#playerSprite')
+
+// cache enemy DOM elements
 
 const $enemyHP = $('li#eHp');
 const $enemyMP = $('li#eMp');
@@ -54,11 +62,23 @@ const playerSprites = ['url("sprite/skull-chromep.png")','url("sprite/skull-clea
 const enemySprites = ['url("sprite/skull-chrome.png")','url("sprite/skull-clear.png")','url("sprite/skull-ice.png")',
 'url("sprite/skull-gold.png")','url("sprite/skull-lava.png")']
 
+// const conditions = [
+//     {
+//         type: 'Frail',
+//         effect(obj) {
+//             this.hp -= 15;
+//             this.attack -= 2;
 
+//         }
+//     }
+// ]
+
+const enemy = [];
 
 
 startGame = () => {
-
+    
+    enemy.pop();
     $('.attackButton').show();
     $('.spellButton').show();
 
@@ -72,9 +92,10 @@ startGame = () => {
         .8,                                                             //ACC
         playerSprites[randomNumBetween(0,playerSprites.length - 1)]     //SPRITE
     )
+    $battleText.text(`Player attacks for ${player.attack} damage`)
 
     // Generate 1st enemy
-    const enemy = [];
+    
     enemy.push(new Combatant(
         names[randomNumBetween(0,names.length - 1)],                    //NAME
         randomNumBetween(10,15),                                        //HP
@@ -107,25 +128,7 @@ startGame = () => {
         enemySprite.style.backgroundImage = enemy[0].sprite;
     }
     render();
-    // // Populate player information into DOM
-    // $playerName.text(player.name);
-    // $playerHP.text('HP: ' + player.hp + '/' + player.maxHp);
-    // $playerMP.text('MP: ' + player.mp);
-    // $playerAttack.text('ATK: ' + player.attack);
-    // $playerDefense.text('DEF: ' + player.defense);
-    // // playerSpeed.textContent = 'SPD: ' + Player.speed
-    // playerSprite.style.backgroundImage = player.sprite;
-    // // $('.startButton').hide();
-
-    // // Populate enemy information into DOM
-
-    // $enemyName.text(enemy[0].name);
-    // $enemyHP.text('HP: ' + enemy[0].hp + '/' + enemy[0].maxHp);
-    // $enemyMP.text('MP: ' + enemy[0].mp);
-    // $enemyAttack.text('ATK: ' + enemy[0].attack);
-    // $enemyDefense.text('DEF: ' + enemy[0].defense);
-    // // playerSpeed.textContent = 'SPD: ' + Player.speed
-    // enemySprite.style.backgroundImage = enemy[0].sprite;
+   
 
 }
 

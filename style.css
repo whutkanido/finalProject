@@ -27,6 +27,20 @@ ul {
     background-repeat: no-repeat;
 }
 
+.battleText {
+    /* border: 1px solid white; */
+    color: yellow;
+    text-align: center;
+    font-size: 25px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    height: 30px;
+    width: 600px;
+    position: absolute;
+    top: 48%;
+    left: 49%;
+    transform: translate(-50%, -50%);
+}
+
 #pName {
     /* border: 1px solid white; */
     color: white;
