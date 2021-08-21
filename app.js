@@ -74,16 +74,18 @@ const enemySprites = ['url("sprite/skull-chrome.png")','url("sprite/skull-clear.
 // ]
 
 const enemy = [];
+const player = [];
 
 
 startGame = () => {
     
     enemy.pop();
+    player.pop();
     $('.attackButton').show();
     $('.spellButton').show();
 
     // Generate a player character
-    const player = new Combatant(
+    player.push(new Combatant(
         names[randomNumBetween(0,names.length - 1)],                    //NAME
         randomNumBetween(30,50),                                        //HP
         15,                                                             //MP
@@ -91,7 +93,7 @@ startGame = () => {
         randomNumBetween(0,5),                                          //DEF
         .8,                                                             //ACC
         playerSprites[randomNumBetween(0,playerSprites.length - 1)]     //SPRITE
-    )
+    ))
     $battleText.text(`Player attacks for ${player.attack} damage`)
 
     // Generate 1st enemy
@@ -108,13 +110,13 @@ startGame = () => {
 
     render = () => {
         // Populate player information into DOM
-        $playerName.text(player.name);
-        $playerHP.text('HP: ' + player.hp + '/' + player.maxHp);
-        $playerMP.text('MP: ' + player.mp);
-        $playerAttack.text('ATK: ' + player.attack);
-        $playerDefense.text('DEF: ' + player.defense);
+        $playerName.text(player[0].name);
+        $playerHP.text('HP: ' + player[0].hp + '/' + player[0].maxHp);
+        $playerMP.text('MP: ' + player[0].mp);
+        $playerAttack.text('ATK: ' + player[0].attack);
+        $playerDefense.text('DEF: ' + player[0].defense);
         // playerSpeed.textContent = 'SPD: ' + Player.speed
-        playerSprite.style.backgroundImage = player.sprite;
+        playerSprite.style.backgroundImage = player[0].sprite;
         // $('.startButton').hide();
     
         // Populate enemy information into DOM
@@ -135,6 +137,3 @@ startGame = () => {
 
 
 $(document).on("click", ".startButton", startGame)
-
-
-
