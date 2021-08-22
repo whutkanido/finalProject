@@ -5,6 +5,7 @@ function randomNumBetween(min, max) {
 // cache game DOM elements
 
 const $battleText = $('div.battleText');
+const $charDivs = $('div.character')
 
 // cache player DOM elements
 
@@ -79,7 +80,9 @@ const enemy = [];
 const player = [];
 const state = {
     playerDead: false,
-    enemyDead: false
+    enemyDead: false,
+    playerLevel: 1,
+    playerXP: 0,
 }
 
 render = () => {
@@ -111,6 +114,10 @@ startGame = () => {
     player.pop();
     $('.attackButton').show();
     $('.spellButton').show();
+    $charDivs.show();
+    $battleText.empty();
+
+    state.playerDead = false;
 
     // Generate a player character
     player.push(new Combatant(
@@ -167,11 +174,12 @@ runTurn = () => {
     }
 
     if (state.playerDead === true) {
-        // hide attack button
-        // show start game button
-        // hide enemy and player divs
+        $('.attackButton').hide();
+        $('.spellButton').hide();
+        $('.startButton').show();
+        $charDivs.hide();
         // enemy.pop() to clear enemy state for next round
-        // update battleText div to GAME OVER
+        $battleText.text(`${player[0].name} has died.  Try again with the next hero`)
     }
 
     if (state.enemyDead === true) {
