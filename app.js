@@ -51,11 +51,11 @@ class Combatant {
     }
 }
 
-const names = ['Stacked Beefchad', `Chel'thor the Dominant`, `Sinderwrakk`, `Stolen Soul`, `Undead Beast`,
-    `Urgonn`, `Strange Skull`, `Old Fisherman`, `Uncouth Marauder`, `Vrigskull`, `Zon Pan'zog`,
-    `Terriflogg`, `Smokeskull`, `Chitinbear the Skull`, `Lost Demon`, `Placid Ghost`,
+const names = ['Stacked Beefchad', `Chel'thor`, `Sinderwrakk`, `Stolen Soul`, `Undead Beast`,
+    `Urgonn`, `Strange Skull`, `Old Fisherman`, `Uncouth Marauder`, `Vrigskull`, `Dran'zog`,
+    `Terriflogg`, `Smokeskull`, `Nmemnon`, `Lost Demon`, `Tainted Nemesis`,
     `Strange Demon`, `Lost Skull`, `Unspoken Demon`, `Lord Ragnaskull`, `Lost Ghost`,
-    `Strange Ghost`, `Tempest Demon`, `Strange Memory`, `Snagg`, `Grunkleskull`, `The Last Skullord`]
+    `Strange Ghost`, `Tempest Demon`, `Strange Memory`, `Snagg`, `Grunkleskull`, `Lazaruth`]
 
 const playerSprites = ['url("sprite/skull-chromep.png")', 'url("sprite/skull-clearp.png")', 'url("sprite/skull-icep.png")',
     'url("sprite/skull-goldp.png")', 'url("sprite/skull-lavap.png")']
@@ -114,6 +114,20 @@ render = () => {
 
 startGame = () => {
 
+    // Calculate player stats based on pLevel
+    
+    const pHp = () => {
+        let i;
+        i = randomNumBetween(20,40) + (state.playerLevel * 10);
+        return i;
+    }
+
+    const pStat = (x,y) => {
+        let i;
+        i = randomNumBetween(x,y) + (state.playerLevel - 1);
+        return i;
+    }
+
     enemy.pop();
     player.pop();
     $('.attackButton').show();
@@ -126,10 +140,10 @@ startGame = () => {
     // Generate a player character
     player.push(new Combatant(
         names[randomNumBetween(0, names.length - 1)],                    //NAME
-        randomNumBetween(30, 50),                                        //HP
+        pHp(),                                        //HP
         15,                                                             //MP
-        randomNumBetween(3, 9),                                          //ATK
-        randomNumBetween(0, 5),                                          //DEF
+        pStat(3, 9),                                          //ATK
+        pStat(0, 5),                                          //DEF
         .8,                                                             //ACC
         playerSprites[randomNumBetween(0, playerSprites.length - 1)]     //SPRITE
     ))
@@ -154,16 +168,27 @@ startGame = () => {
 }
 
 runTurn = () => {
+
+    // If enemy attack - player defense is negative, have the enemy still do 1 damage
+    
+    const eAtk = () => {
+        let i = (enemy[0].attack - player[0].defense)
+        if (i <= 0) {
+            player[0].hp -= 1;
+        } else {
+            player[0].hp -= (enemy[0].attack - player[0].defense);
+        }
+
+    }
     
     // State change
-    // Attack phase glitch:
-    // When pDefense is higher than eAttack, enemy does negative dmg and player regains HP
+    
     
     if (state.playerDead === false && state.enemyDead === false) enemy[0].hp -= (player[0].attack - enemy[0].defense);
 
     if (enemy[0].hp <= 0) state.enemyDead = true;
 
-    if (state.playerDead === false && state.enemyDead === false) player[0].hp -= (enemy[0].attack - player[0].defense);
+    if (state.playerDead === false && state.enemyDead === false) eAtk();
 
     if (player[0].hp <= 0) state.playerDead = true;
 
@@ -175,7 +200,13 @@ runTurn = () => {
         $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         setTimeout(function () {
             $battleText.empty();
+            let dmg = (enemy[0].attack - player[0].defense);
+            // diff damage display if enemy atack is less than player defense
+            if (dmg > 0) {
             $battleText.text(`Enemy attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
+            } else {
+                $battleText.text(`Enemy attacks for ` + 1 + ` damage`);
+            }
             setTimeout(function () {
                 $battleText.empty();
                 render();
@@ -210,6 +241,10 @@ runTurn = () => {
         if (state.playerXP >= 500) {
             state.playerLevel += 1;
             state.playerXP = 0;
+            player[0].hp += 10;
+            player[0].maxHp += 10;
+            player[0].attack += 1;
+            player[0].defense +=1;
         }
         
         enemy.push(new Combatant(
