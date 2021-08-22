@@ -106,6 +106,9 @@ render = () => {
     $enemyDefense.text('DEF: ' + enemy[0].defense);
     // playerSpeed.textContent = 'SPD: ' + Player.speed
     enemySprite.style.backgroundImage = enemy[0].sprite;
+
+    // Update player level & XP count
+    $("div.xp").text(`LVL ` + state.playerLevel + ` || EXP: ` + state.playerXP + `/1000`);
 }
 
 
@@ -193,7 +196,7 @@ runTurn = () => {
 
     if (state.enemyDead === true) {
         
-        $battleText.text(`Player attacks for ${player[0].attack} damage`);
+        $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         setTimeout(function () {
             $battleText.empty();
             $battleText.text(`Enemy killed.  A new enemy appears!`);
@@ -203,6 +206,7 @@ runTurn = () => {
         }, 3000);
         
         enemy.pop();
+        state.playerXP += 100;
         
         enemy.push(new Combatant(
             names[randomNumBetween(0, names.length - 1)],                    //NAME
