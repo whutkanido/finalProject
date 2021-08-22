@@ -83,6 +83,7 @@ const state = {
     enemyDead: false,
     playerLevel: 1,
     playerXP: 0,
+    bossCounter: 0
 }
 
 render = () => {
@@ -150,27 +151,35 @@ startGame = () => {
 }
 
 runTurn = () => {
-    if (state.playerDead === false && state.enemyDead === false) {
-        enemy[0].hp -= (player[0].attack - enemy[0].defense);
-        player[0].hp -= (enemy[0].attack - player[0].defense);
-    }
-
-    if (player[0].hp <= 0) state.playerDead = true;
+    
+    // State change
+    // Attack phase glitch:
+    // When pDefense is higher than eAttack, enemy does negative dmg and player regains HP
+    
+    if (state.playerDead === false && state.enemyDead === false) enemy[0].hp -= (player[0].attack - enemy[0].defense);
 
     if (enemy[0].hp <= 0) state.enemyDead = true;
 
+    if (state.playerDead === false && state.enemyDead === false) player[0].hp -= (enemy[0].attack - player[0].defense);
+
+    if (player[0].hp <= 0) state.playerDead = true;
+
+    
+    // Render
+    
     if (state.playerDead === false && state.enemyDead === false) {
 
-        $battleText.text(`Player attacks for ${player[0].attack} damage`);
+        $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         setTimeout(function () {
             $battleText.empty();
-            $battleText.text(`Enemy attacks for ${enemy[0].attack} damage`);
+            $battleText.text(`Enemy attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
             setTimeout(function () {
                 $battleText.empty();
+                render();
             }, 2000);
         }, 3000);
 
-        render();
+        // render();
     }
 
     if (state.playerDead === true) {
@@ -204,8 +213,12 @@ runTurn = () => {
             .7,                                                             //ACC
             enemySprites[randomNumBetween(0, enemySprites.length - 1)]       //SPRITE
         ))
+
+        setTimeout(function () {
+            render();
+        }, 4000);
         
-        render()
+        // render()
         state.enemyDead = false;
 
     }
