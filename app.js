@@ -108,7 +108,7 @@ render = () => {
     enemySprite.style.backgroundImage = enemy[0].sprite;
 
     // Update player level & XP count
-    $("div.xp").text(`LVL ` + state.playerLevel + ` || EXP: ` + state.playerXP + `/1000`);
+    $("div.xp").text(`LVL ` + state.playerLevel + ` || EXP: ` + state.playerXP + `/500`);
 }
 
 
@@ -207,6 +207,10 @@ runTurn = () => {
         
         enemy.pop();
         state.playerXP += 100;
+        if (state.playerXP >= 500) {
+            state.playerLevel += 1;
+            state.playerXP = 0;
+        }
         
         enemy.push(new Combatant(
             names[randomNumBetween(0, names.length - 1)],                    //NAME
