@@ -198,6 +198,7 @@ runTurn = () => {
         ))
         
         render()
+        state.enemyDead = false;
 
     }
 
