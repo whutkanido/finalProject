@@ -189,6 +189,9 @@ runTurn = () => {
 
 displayText = () => {
     $battleText.text(`Player attacks for ${player[0].attack} damage`);
+    setTimeout(function () {
+        $battleText.empty();
+    }, 2000);
 }
 
 
