@@ -115,6 +115,8 @@ render = () => {
 
 startGame = () => {
 
+    
+
     // Calculate player stats based on pLevel
 
     const pHp = () => {
@@ -132,7 +134,7 @@ startGame = () => {
     enemy.pop();
     player.pop();
     $('.attackButton').show();
-    $('.spellButton').show();
+    $('.startButton').hide();
     $charDivs.show();
     $battleText.empty();
 
@@ -170,6 +172,15 @@ startGame = () => {
 
 runTurn = () => {
 
+    // Hide attack button while attack phase runs
+    
+    $('.attackButton').hide()
+    setTimeout(function(){
+        
+        $('.attackButton').show();
+
+    },2500); 
+
     // If enemy attack - player defense is negative, have the enemy still do 1 damage
 
     const eAtk = () => {
@@ -198,30 +209,36 @@ runTurn = () => {
 
     // State change
 
-
+        // Player attack + damage
     if (state.playerDead === false && state.enemyDead === false) pAtk();
 
+        // Check if enemy is dead
     if (enemy[0].hp <= 0) state.enemyDead = true;
 
+        // If enemy is still alive, enemy attacks + damage
     if (state.playerDead === false && state.enemyDead === false) eAtk();
 
+        // Check if player is dead
     if (player[0].hp <= 0) state.playerDead = true;
 
 
     // Render
 
+        // If no one is dead, display normal turn to player (both chars attack)
     if (state.playerDead === false && state.enemyDead === false) {
 
             let eDmg = (enemy[0].attack - player[0].defense);
             let pDmg = (player[0].attack - enemy[0].defense);
         
+        
+            // displays diff text if player attack is less than enemy defense    
         if (pDmg > 0) {
             $battleText.text(`${player[0].name} attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         } else {
             $battleText.text(`${player[0].name} attacks for ` + 1 + ` damage`);
         }
         
-        
+            // Show player dmg text first, then show enemy dmg text after a set time
         setTimeout(function () {
             $battleText.empty();
             
@@ -231,6 +248,7 @@ runTurn = () => {
             } else {
                 $battleText.text(`${enemy[0].name} attacks for ` + 1 + ` damage`);
             }
+                // Clear all battle text once turn is over
             setTimeout(function () {
                 $battleText.empty();
                 render();
@@ -240,28 +258,48 @@ runTurn = () => {
         
     }
 
+        // if player is dead, show gameover screen & reset boss counter
+    
     if (state.playerDead === true) {
         state.bossDead = false;
         state.bossCounter = 0;
         
         $('.attackButton').hide();
+        setTimeout(function(){
+        
+             $('.attackButton').hide();
+    
+        },2500); 
         $('.spellButton').hide();
         $('.startButton').show();
         $charDivs.hide();
         $battleText.text(`${player[0].name} has died.  Try again with the next hero`)
     }
 
+        // if boss is dead, show Victory screen
+    
     if (state.enemyDead === true && state.bossDead === true) {
         $('.attackButton').hide();
+        setTimeout(function(){
+        
+            $('.attackButton').hide();
+   
+       },2500); 
         $('.spellButton').hide();
         $('.startButton').show();
         $charDivs.hide();
         $battleText.text(`${player[0].name}, the ultimate hero, has defeated the boss.  You win.`)
     }
 
+        // if enemy is dead, generate a new enemy, give player +100 XP
+        // after 10 enemies have been destroyed, generate a Boss enemy instead
+
     if (state.enemyDead === true && state.bossDead === false) {
 
         $battleText.text(`${player[0].name} attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
+        
+            // timer to animate battle text
+        
         setTimeout(function () {
             $battleText.empty();
             $battleText.text(`Enemy killed.  A new enemy appears!`);
@@ -270,11 +308,15 @@ runTurn = () => {
             }, 1000);
         }, 1500);
 
+        
+            // clear enemy[] memory
         enemy.pop();
+            // increment boss counter by 1
         state.bossCounter += 1;
+            // give player 100 XP
         state.playerXP += 100;
         
-        // Level up
+            // Level up
         if (state.playerXP >= 500) {
             state.playerLevel += 1;
             state.playerXP = 0;
@@ -284,26 +326,27 @@ runTurn = () => {
             player[0].defense += 1;
         }
 
+            // create a boss after player defeats 10 enemies
         if (state.bossCounter === 10) {
             enemy.push(new Combatant(
-                'The Big Boss',                    //NAME
+                'The Big Boss',                                                  //NAME
                 randomNumBetween(50, 65),                                        //HP
                 15,                                                              //MP
-                randomNumBetween(12, 15),                                          //ATK
+                randomNumBetween(12, 15),                                        //ATK
                 randomNumBetween(5, 9),                                          //DEF
-                .8,                                                             //ACC
+                .8,                                                              //ACC
                 enemySprites[randomNumBetween(0, enemySprites.length - 1)]       //SPRITE
             ))
             state.bossDead = true;
         } else {
-
+            // create a new regular enemy
         enemy.push(new Combatant(
             names[randomNumBetween(0, names.length - 1)],                    //NAME
             randomNumBetween(10, 15),                                        //HP
-            0,                                                              //MP
+            0,                                                               //MP
             randomNumBetween(3, 6),                                          //ATK
             randomNumBetween(0, 2),                                          //DEF
-            .7,                                                             //ACC
+            .7,                                                              //ACC
             enemySprites[randomNumBetween(0, enemySprites.length - 1)]       //SPRITE
         ))
         
@@ -311,6 +354,8 @@ runTurn = () => {
 
         state.enemyDead = false;
 
+        
+            // small delay to let text animation play before showing new enemy
         setTimeout(function () {
             render();
         }, 2000);
@@ -321,33 +366,9 @@ runTurn = () => {
     }
 
 
-    // if both chars alive, attacks happen
-    // each attack displays attack text for ~3-5 seconds before proceeding
-    // after attack phase
-    // after attack phase, check state
-    // if both chars are alive after attacks,
-    // render updated stats to DOM
-    // if player is dead after attacks,
-    // end current game and return to initial screen (hide attack button)
-    // if enemy is dead after attacks,
-    // create a new enemy and keep battle allow player to click attack again
-    // render new enemy and updated player stats to DOM
+    
 }
 
-displayText = () => {
-    $battleText.text(`Player attacks for ${player[0].attack} damage`);
-    setTimeout(function () {
-        $battleText.empty();
-        $battleText.text(`Enemy attacks for ${enemy[0].attack} damage`);
-        setTimeout(function () {
-            $battleText.empty();
-        }, 2000);
-    }, 3000);
-
-
-}
-
-
-
+// Clicking on buttons runs the game functions
 $(document).on("click", ".startButton", startGame);
 $(document).on("click", ".attackButton", runTurn);

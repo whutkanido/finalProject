@@ -146,15 +146,29 @@ ul {
 .startButton {
     position: absolute;
     top: 92%;
-    left: 10%;
+    left: 50%;
     transform: translate(-50%, -50%);
+    background-color: transparent;
+    height: 50px;
+    width: 100px;
+    color: white;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 .attackButton {
     position: absolute;
     top: 92%;
-    left: 58%;
+    left: 50%;
     transform: translate(-50%, -50%);
+    background-color: transparent;
+    height: 50px;
+    width: 100px;
+    color: white;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 .spellButton {
@@ -163,3 +177,4 @@ ul {
     left: 64%;
     transform: translate(-50%, -50%);
 }
+
