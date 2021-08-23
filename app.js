@@ -83,7 +83,8 @@ const state = {
     enemyDead: false,
     playerLevel: 1,
     playerXP: 0,
-    bossCounter: 0
+    bossCounter: 0,
+    bossDead: false
 }
 
 render = () => {
@@ -115,16 +116,16 @@ render = () => {
 startGame = () => {
 
     // Calculate player stats based on pLevel
-    
+
     const pHp = () => {
         let i;
-        i = randomNumBetween(20,40) + (state.playerLevel * 10);
+        i = randomNumBetween(20, 40) + (state.playerLevel * 10);
         return i;
     }
 
-    const pStat = (x,y) => {
+    const pStat = (x, y) => {
         let i;
-        i = randomNumBetween(x,y) + (state.playerLevel - 1);
+        i = randomNumBetween(x, y) + (state.playerLevel - 1);
         return i;
     }
 
@@ -170,7 +171,7 @@ startGame = () => {
 runTurn = () => {
 
     // If enemy attack - player defense is negative, have the enemy still do 1 damage
-    
+
     const eAtk = () => {
         let i = (enemy[0].attack - player[0].defense)
         if (i <= 0) {
@@ -180,10 +181,10 @@ runTurn = () => {
         }
 
     }
-    
+
     // State change
-    
-    
+
+
     if (state.playerDead === false && state.enemyDead === false) enemy[0].hp -= (player[0].attack - enemy[0].defense);
 
     if (enemy[0].hp <= 0) state.enemyDead = true;
@@ -192,9 +193,9 @@ runTurn = () => {
 
     if (player[0].hp <= 0) state.playerDead = true;
 
-    
+
     // Render
-    
+
     if (state.playerDead === false && state.enemyDead === false) {
 
         $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
@@ -203,50 +204,76 @@ runTurn = () => {
             let dmg = (enemy[0].attack - player[0].defense);
             // diff damage display if enemy atack is less than player defense
             if (dmg > 0) {
-            $battleText.text(`Enemy attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
+                $battleText.text(`Enemy attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
             } else {
                 $battleText.text(`Enemy attacks for ` + 1 + ` damage`);
             }
             setTimeout(function () {
                 $battleText.empty();
                 render();
-            }, 2000);
-        }, 3000);
+            }, 1000);
+        }, 1500);
 
-        // render();
+        
     }
 
     if (state.playerDead === true) {
+        state.bossDead = false;
+        state.bossCounter = 0;
+        
         $('.attackButton').hide();
         $('.spellButton').hide();
         $('.startButton').show();
         $charDivs.hide();
-        // enemy.pop() to clear enemy state for next round
         $battleText.text(`${player[0].name} has died.  Try again with the next hero`)
     }
 
-    if (state.enemyDead === true) {
-        
+    if (state.enemyDead === true && state.bossDead === true) {
+        $('.attackButton').hide();
+        $('.spellButton').hide();
+        $('.startButton').show();
+        $charDivs.hide();
+        $battleText.text(`${player[0].name}, the ultimate hero, has defeated the boss.  You win.`)
+    }
+
+    if (state.enemyDead === true && state.bossDead === false) {
+
         $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         setTimeout(function () {
             $battleText.empty();
             $battleText.text(`Enemy killed.  A new enemy appears!`);
             setTimeout(function () {
                 $battleText.empty();
-            }, 2000);
-        }, 3000);
-        
+            }, 1000);
+        }, 1500);
+
         enemy.pop();
+        state.bossCounter += 1;
         state.playerXP += 100;
+        
+        // Level up
         if (state.playerXP >= 500) {
             state.playerLevel += 1;
             state.playerXP = 0;
             player[0].hp += 10;
             player[0].maxHp += 10;
             player[0].attack += 1;
-            player[0].defense +=1;
+            player[0].defense += 1;
         }
-        
+
+        if (state.bossCounter === 10) {
+            enemy.push(new Combatant(
+                'The Big Boss',                    //NAME
+                randomNumBetween(50, 65),                                        //HP
+                15,                                                              //MP
+                randomNumBetween(12, 15),                                          //ATK
+                randomNumBetween(5, 9),                                          //DEF
+                .8,                                                             //ACC
+                enemySprites[randomNumBetween(0, enemySprites.length - 1)]       //SPRITE
+            ))
+            state.bossDead = true;
+        } else {
+
         enemy.push(new Combatant(
             names[randomNumBetween(0, names.length - 1)],                    //NAME
             randomNumBetween(10, 15),                                        //HP
@@ -256,12 +283,16 @@ runTurn = () => {
             .7,                                                             //ACC
             enemySprites[randomNumBetween(0, enemySprites.length - 1)]       //SPRITE
         ))
+        
+        }
+
+        state.enemyDead = false;
 
         setTimeout(function () {
             render();
-        }, 4000);
+        }, 2000);
+
         
-        // render()
         state.enemyDead = false;
 
     }
