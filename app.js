@@ -178,6 +178,20 @@ runTurn = () => {
             player[0].hp -= 1;
         } else {
             player[0].hp -= (enemy[0].attack - player[0].defense);
+            if (player[0].hp < 0) player[0].hp = 0;
+        }
+
+    }
+
+    const pAtk = () => {
+        let i = (player[0].attack - enemy[0].defense)
+        if (i <= 0) {
+            enemy[0].hp -= 1;
+            render();
+        } else {
+            enemy[0].hp -= (player[0].attack - enemy[0].defense);
+            if (enemy[0].hp < 0) enemy[0].hp = 0;
+            render();
         }
 
     }
@@ -185,7 +199,7 @@ runTurn = () => {
     // State change
 
 
-    if (state.playerDead === false && state.enemyDead === false) enemy[0].hp -= (player[0].attack - enemy[0].defense);
+    if (state.playerDead === false && state.enemyDead === false) pAtk();
 
     if (enemy[0].hp <= 0) state.enemyDead = true;
 
@@ -198,15 +212,24 @@ runTurn = () => {
 
     if (state.playerDead === false && state.enemyDead === false) {
 
-        $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
+            let eDmg = (enemy[0].attack - player[0].defense);
+            let pDmg = (player[0].attack - enemy[0].defense);
+        
+        if (pDmg > 0) {
+            $battleText.text(`${player[0].name} attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
+        } else {
+            $battleText.text(`${player[0].name} attacks for ` + 1 + ` damage`);
+        }
+        
+        
         setTimeout(function () {
             $battleText.empty();
-            let dmg = (enemy[0].attack - player[0].defense);
+            
             // diff damage display if enemy atack is less than player defense
-            if (dmg > 0) {
-                $battleText.text(`Enemy attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
+            if (eDmg > 0) {
+                $battleText.text(`${enemy[0].name} attacks for ` + (enemy[0].attack - player[0].defense) + ` damage`);
             } else {
-                $battleText.text(`Enemy attacks for ` + 1 + ` damage`);
+                $battleText.text(`${enemy[0].name} attacks for ` + 1 + ` damage`);
             }
             setTimeout(function () {
                 $battleText.empty();
@@ -238,7 +261,7 @@ runTurn = () => {
 
     if (state.enemyDead === true && state.bossDead === false) {
 
-        $battleText.text(`Player attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
+        $battleText.text(`${player[0].name} attacks for ` + (player[0].attack - enemy[0].defense) + ` damage`);
         setTimeout(function () {
             $battleText.empty();
             $battleText.text(`Enemy killed.  A new enemy appears!`);
