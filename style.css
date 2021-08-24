@@ -148,7 +148,8 @@ ul {
     top: 92%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: transparent;
+    z-index: 2;
+    background-color: black;
     height: 50px;
     width: 100px;
     color: white;

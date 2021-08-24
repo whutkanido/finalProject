@@ -10,7 +10,7 @@ const $charDivs = $('div.character')
 // cache player DOM elements
 
 const $playerHP = $('li#pHp');
-const $playerMP = $('li#pMp');
+// const $playerMP = $('li#pMp');
 const $playerAttack = $('li#pAttack');
 const $playerName = $('div#pName');
 const $playerDefense = $('li#pDefense');
@@ -20,14 +20,15 @@ const $playerDefense = $('li#pDefense');
 // cache enemy DOM elements
 
 const $enemyHP = $('li#eHp');
-const $enemyMP = $('li#eMp');
+// const $enemyMP = $('li#eMp');
 const $enemyAttack = $('li#eAttack');
 const $enemyName = $('div#eName');
 const $enemyDefense = $('li#eDefense');
 
-// Hide game buttons until game starts
+// Hide game elements until game starts
 $('.attackButton').hide();
 $('.spellButton').hide();
+$charDivs.hide();
 
 class Combatant {
 
@@ -91,7 +92,7 @@ render = () => {
     // Populate player information into DOM
     $playerName.text(player[0].name);
     $playerHP.text('HP: ' + player[0].hp + '/' + player[0].maxHp);
-    $playerMP.text('MP: ' + player[0].mp);
+    // $playerMP.text('MP: ' + player[0].mp);
     $playerAttack.text('ATK: ' + player[0].attack);
     $playerDefense.text('DEF: ' + player[0].defense);
     // playerSpeed.textContent = 'SPD: ' + Player.speed
@@ -102,7 +103,7 @@ render = () => {
 
     $enemyName.text(enemy[0].name);
     $enemyHP.text('HP: ' + enemy[0].hp + '/' + enemy[0].maxHp);
-    $enemyMP.text('MP: ' + enemy[0].mp);
+    // $enemyMP.text('MP: ' + enemy[0].mp);
     $enemyAttack.text('ATK: ' + enemy[0].attack);
     $enemyDefense.text('DEF: ' + enemy[0].defense);
     // playerSpeed.textContent = 'SPD: ' + Player.speed
@@ -175,11 +176,13 @@ runTurn = () => {
     // Hide attack button while attack phase runs
     
     $('.attackButton').hide()
+    
+    
     setTimeout(function(){
         
         $('.attackButton').show();
 
-    },2500); 
+    },2500);
 
     // If enemy attack - player defense is negative, have the enemy still do 1 damage
 
@@ -372,3 +375,6 @@ runTurn = () => {
 // Clicking on buttons runs the game functions
 $(document).on("click", ".startButton", startGame);
 $(document).on("click", ".attackButton", runTurn);
+
+
+
