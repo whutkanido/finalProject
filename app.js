@@ -268,11 +268,11 @@ runTurn = () => {
         state.bossCounter = 0;
         
         $('.attackButton').hide();
-        setTimeout(function(){
+        // setTimeout(function(){
         
-             $('.attackButton').hide();
+        //      $('.attackButton').hide();
     
-        },2500); 
+        // },2500); 
         $('.spellButton').hide();
         $('.startButton').show();
         $charDivs.hide();
@@ -283,11 +283,11 @@ runTurn = () => {
     
     if (state.enemyDead === true && state.bossDead === true) {
         $('.attackButton').hide();
-        setTimeout(function(){
+    //     setTimeout(function(){
         
-            $('.attackButton').hide();
+    //         $('.attackButton').hide();
    
-       },2500); 
+    //    },2500); 
         $('.spellButton').hide();
         $('.startButton').show();
         $charDivs.hide();
