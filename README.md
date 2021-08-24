@@ -1,8 +1,7 @@
-
-<img src="https://i.imgur.com/h90Lege.png">
-
 <!-- ROGUELIKE RPG -->
 ## Roguelike RPG
+
+<img src="https://i.imgur.com/h90Lege.png">
 
 Battle against randomly generated enemies.   Eventually you have to face The Big Boss...
 
